@@ -21,6 +21,11 @@
   --c-violet: #7c5cfc;
   --c-purple: #a855f7;
 
+  /* Operating-mode colours: used consistently for Historic / Live / Simulation */
+  --c-historic: #f59e0b;
+  --c-live: #22d3ee;
+  --c-sim: #a855f7;
+
   --gradient-brand: linear-gradient(90deg, var(--c-cyan) 0%, var(--c-blue) 38%, var(--c-violet) 70%, var(--c-purple) 100%);
   --gradient-brand-soft: linear-gradient(135deg, rgba(34, 211, 238, 0.16), rgba(124, 92, 252, 0.16));
   --gradient-radial-glow: radial-gradient(circle at center, rgba(59, 130, 246, 0.22), transparent 70%);
@@ -44,6 +49,9 @@
   --color-blue: var(--c-blue);
   --color-violet: var(--c-violet);
   --color-purple: var(--c-purple);
+  --color-historic: var(--c-historic);
+  --color-live: var(--c-live);
+  --color-sim: var(--c-sim);
   --font-sans: var(--font-manrope);
   --font-display: var(--font-manrope);
 }
@@ -54,6 +62,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
   background: var(--bg-void);
 }
 
@@ -215,4 +224,30 @@ select:focus-visible,
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(var(--c-blue), var(--c-violet));
   border-radius: 999px;
+}
+
+/* Shared layout rhythm: every section uses the same vertical spacing and heading scale */
+.section {
+  position: relative;
+  padding-block: 6rem;
+}
+@media (min-width: 640px) {
+  .section {
+    padding-block: 8rem;
+  }
+}
+.h-section {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-cyan);
+  font-weight: 600;
 }

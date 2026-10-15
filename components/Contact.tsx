@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
-import { DEMO_EVENT } from "@/lib/demo";
+import { CONTACT_EVENT, requestContact } from "@/lib/demo";
+import { SectionHeader } from "./ui";
 
 type FormState = {
   name: string;
@@ -18,7 +19,6 @@ type FormState = {
 };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const DEMO_TOPIC_INDEX = 4;
 
 const initialForm: FormState = {
   name: "",
@@ -44,9 +44,12 @@ export function Contact() {
   }, []);
 
   useEffect(() => {
-    const onDemo = () => setForm((f) => ({ ...f, topicIndex: DEMO_TOPIC_INDEX }));
-    window.addEventListener(DEMO_EVENT, onDemo);
-    return () => window.removeEventListener(DEMO_EVENT, onDemo);
+    const onSelect = (e: Event) => {
+      const idx = (e as CustomEvent<number>).detail;
+      if (typeof idx === "number") setForm((f) => ({ ...f, topicIndex: idx }));
+    };
+    window.addEventListener(CONTACT_EVENT, onSelect);
+    return () => window.removeEventListener(CONTACT_EVENT, onSelect);
   }, []);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -93,7 +96,7 @@ export function Contact() {
 
   if (status === "success") {
     return (
-      <section id="kontakt" className="relative py-28 sm:py-36">
+      <section id="contact" className="section">
         <div className="mx-auto max-w-2xl px-6">
           <Reveal>
             <div className="rounded-3xl glass-strong p-10 text-center">
@@ -111,19 +114,39 @@ export function Contact() {
   }
 
   return (
-    <section id="kontakt" className="relative py-28 sm:py-36">
-      <div className="mx-auto max-w-2xl px-6">
-        <Reveal>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white text-center">
-            {t.contact.headline}
-          </h2>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <p className="mt-5 text-text-secondary text-center leading-relaxed">{t.contact.sub}</p>
-        </Reveal>
+    <section id="contact" className="section">
+      <div className="mx-auto max-w-6xl px-6">
+        <SectionHeader eyebrow={t.contact.eyebrow} title={t.contact.headline} />
 
-        <Reveal delay={0.16}>
-          <form onSubmit={onSubmit} noValidate className="mt-12 rounded-3xl glass-strong p-6 sm:p-9 space-y-5">
+        {/* Who are you? Pilot customers first: it is the primary call to action. */}
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {t.contact.cards.map((c, i) => (
+            <Reveal key={c.title} delay={i * 0.08} className="h-full">
+              <div
+                className={`h-full rounded-2xl p-6 flex flex-col ${
+                  c.primary ? "glass-strong gradient-border shadow-[var(--shadow-glow-sm)]" : "glass"
+                }`}
+              >
+                <h3 className="text-lg font-semibold text-white">{c.title}</h3>
+                <p className="mt-2 text-sm text-text-secondary leading-relaxed flex-1">{c.text}</p>
+                <button
+                  type="button"
+                  onClick={() => requestContact(i)}
+                  className={`mt-6 rounded-full px-5 py-3 text-sm font-medium text-white transition-all ${
+                    c.primary
+                      ? "bg-[image:var(--gradient-brand)] hover:opacity-90 shadow-[var(--shadow-glow-sm)]"
+                      : "border border-border-strong hover:bg-white/5"
+                  }`}
+                >
+                  {c.cta}
+                </button>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.1}>
+          <form onSubmit={onSubmit} noValidate className="mx-auto max-w-2xl mt-10 rounded-3xl glass-strong p-6 sm:p-9 space-y-5">
             {/* Honeypot field, hidden from real users */}
             <div className="hidden" aria-hidden="true">
               <label htmlFor="website">Website</label>

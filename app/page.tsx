@@ -1,14 +1,10 @@
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
-import { Problem } from "@/components/Problem";
-import { DataToAction } from "@/components/DataToAction";
-import { Statement } from "@/components/Statement";
-import { IntelligenceLayer } from "@/components/IntelligenceLayer";
-import { Capabilities } from "@/components/Capabilities";
+import { Modes } from "@/components/Modes";
+import { HowItWorks } from "@/components/HowItWorks";
 import { FeedingIntelligence } from "@/components/FeedingIntelligence";
-import { HumanInLoop } from "@/components/HumanInLoop";
-import { ProductPreview } from "@/components/ProductPreview";
-import { FuturePlatform } from "@/components/FuturePlatform";
+import { Status } from "@/components/Status";
+import { Technology } from "@/components/Technology";
 import { Contact } from "@/components/Contact";
 import { FinalCTA } from "@/components/FinalCTA";
 import { Footer } from "@/components/Footer";
@@ -19,15 +15,11 @@ export default function Home() {
       <Nav />
       <main id="main">
         <Hero />
-        <Problem />
-        <DataToAction />
-        <Statement />
-        <IntelligenceLayer />
-        <Capabilities />
+        <Modes />
+        <HowItWorks />
         <FeedingIntelligence />
-        <HumanInLoop />
-        <ProductPreview />
-        <FuturePlatform />
+        <Status />
+        <Technology />
         <Contact />
         <FinalCTA />
       </main>

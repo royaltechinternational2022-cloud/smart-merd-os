@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
 import { Reveal } from "./Reveal";
+import { SectionHeader, Tag } from "./ui";
 
 const STATE_COLORS = {
   normal: { dot: "#22d3ee", ring: "rgba(34,211,238,0.35)", label: "text-cyan" },
@@ -22,44 +23,33 @@ export function FeedingIntelligence() {
     return () => clearInterval(id);
   }, [states.length]);
 
-  const current = states[active];
-  const colors = STATE_COLORS[current.key as keyof typeof STATE_COLORS];
+  const colors = STATE_COLORS[states[active].key as keyof typeof STATE_COLORS];
 
   return (
-    <section id="foring" className="relative py-28 sm:py-36 overflow-hidden">
+    <section id="feeding" className="section overflow-hidden">
       <div className="absolute inset-0 bg-[image:var(--gradient-radial-glow)] opacity-40 pointer-events-none" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6">
-        <div className="max-w-2xl">
-          <Reveal>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">{t.feeding.headline}</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-6 text-text-secondary leading-relaxed">{t.feeding.p1}</p>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <p className="mt-3 text-text-secondary leading-relaxed">{t.feeding.p2}</p>
-          </Reveal>
-        </div>
+        <SectionHeader eyebrow={t.feeding.eyebrow} title={t.feeding.headline} sub={t.feeding.text} />
 
-        <Reveal delay={0.2}>
+        <Reveal delay={0.15}>
           <div className="mt-14 rounded-3xl glass p-6 sm:p-10">
-            {/* variable chips */}
+            {/* variables the feeding use case connects */}
             <div className="flex flex-wrap items-center justify-center gap-2.5">
               {t.feeding.variables.map((v, i) => (
                 <span key={v} className="flex items-center gap-2.5">
                   <span
-                    className="rounded-full border border-border-soft px-4 py-2 text-xs text-text-secondary transition-colors duration-500"
-                    style={active >= 0 ? { boxShadow: `0 0 0 1px ${colors.ring} inset` } : undefined}
+                    className="rounded-full border border-border-soft px-4 py-2 text-xs text-text-secondary transition-all duration-500"
+                    style={{ boxShadow: `0 0 0 1px ${colors.ring} inset` }}
                   >
                     {v}
                   </span>
-                  {i < t.feeding.variables.length - 1 && <span className="text-border-strong text-sm">→</span>}
+                  {i < t.feeding.variables.length - 1 && <span className="text-border-strong text-sm" aria-hidden="true">→</span>}
                 </span>
               ))}
             </div>
 
             {/* state tabs */}
-            <div className="mt-10 grid sm:grid-cols-3 gap-3">
+            <div className="mt-8 grid sm:grid-cols-3 gap-3">
               {states.map((s, i) => {
                 const c = STATE_COLORS[s.key as keyof typeof STATE_COLORS];
                 const isActive = i === active;
@@ -86,8 +76,22 @@ export function FeedingIntelligence() {
                 );
               })}
             </div>
+
+            {/* customer value */}
+            <div className="mt-8 pt-8 border-t border-border-soft grid sm:grid-cols-3 gap-6">
+              {t.feeding.value.map((v) => (
+                <div key={v.title}>
+                  <div className="text-sm font-semibold text-white">{v.title}</div>
+                  <div className="mt-1.5 text-sm text-text-secondary">{v.text}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </Reveal>
+
+        <div className="mt-6 flex justify-center">
+          <Tag kind="inDevelopment">{t.feeding.note}</Tag>
+        </div>
       </div>
     </section>
   );
