@@ -11,16 +11,21 @@ const manrope = Manrope({
 
 const siteUrl = "https://smartmerd.no";
 
+const title = "Smart Merd | Smart Cage – beslutningsstøtte for havbruk";
+const description =
+  "Smart Cage fra Smart Merd analyserer produksjonsdata, overvåker driften i sanntid og simulerer mulige tiltak – før beslutningene tas. Første bruksområde: fôring.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Smart Merd OS™ | Bedre beslutninger i havbruk",
-  description:
-    "Smart Merd OS™ samler og analyserer produksjons-, miljø- og biologiske data for å gi produksjonsledelsen bedre og mer forklarbar beslutningsstøtte i havbruk.",
+  title,
+  description,
   keywords: [
-    "Smart Merd OS",
+    "Smart Merd",
+    "Smart Cage",
     "havbruk",
     "akvakultur",
     "beslutningsstøtte",
+    "fôring",
     "produksjonsdata",
     "aquaculture decision support",
   ],
@@ -32,21 +37,19 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Smart Merd OS™ | Bedre beslutninger i havbruk",
-    description:
-      "Smart Merd OS™ samler og analyserer produksjons-, miljø- og biologiske data for å gi produksjonsledelsen bedre og mer forklarbar beslutningsstøtte i havbruk.",
+    title,
+    description,
     url: siteUrl,
-    siteName: "Smart Merd OS™",
+    siteName: "Smart Merd",
     locale: "nb_NO",
     alternateLocale: "en_US",
     type: "website",
-    images: [{ url: "/logo-icon.png", width: 512, height: 512, alt: "Smart Merd OS™" }],
+    images: [{ url: "/logo-icon.png", width: 512, height: 512, alt: "Smart Merd" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Smart Merd OS™ | Bedre beslutninger i havbruk",
-    description:
-      "Smart Merd OS™ samler og analyserer produksjons-, miljø- og biologiske data for bedre beslutningsstøtte i havbruk.",
+    title,
+    description,
     images: ["/logo-icon.png"],
   },
   icons: {
@@ -57,14 +60,13 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  name: "Smart Merd OS™",
+  name: "Smart Cage",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
-  description:
-    "Smart Merd OS™ samler og analyserer produksjons-, miljø- og biologiske data og gir produksjonsledelsen forklarbar beslutningsstøtte i havbruk.",
+  description,
   publisher: {
     "@type": "Organization",
-    name: "Smart Merd OS",
+    name: "Smart Merd",
   },
   areaServed: "NO",
   audience: {

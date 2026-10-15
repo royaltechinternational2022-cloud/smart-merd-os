@@ -8,10 +8,10 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   const links = [
-    { label: t.footer.links.platform, href: "#plattform" },
-    { label: t.footer.links.technology, href: "#teknologi" },
-    { label: t.footer.links.about, href: "#om" },
-    { label: t.footer.links.contact, href: "#kontakt" },
+    { label: t.footer.links.modes, href: "#modes" },
+    { label: t.footer.links.feeding, href: "#feeding" },
+    { label: t.footer.links.technology, href: "#technology" },
+    { label: t.footer.links.contact, href: "#contact" },
   ];
 
   return (
@@ -20,9 +20,9 @@ export function Footer() {
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
           <div className="max-w-sm">
             <div className="flex items-center gap-2">
-              <Image src="/logo-icon.png" alt="Smart Merd OS" width={28} height={28} />
+              <Image src="/logo-icon.png" alt="Smart Merd" width={28} height={28} />
               <span className="font-semibold text-white">
-                Smart Merd <span className="text-gradient">OS™</span>
+                Smart Merd
               </span>
             </div>
             <p className="mt-4 text-sm text-text-secondary leading-relaxed">{t.footer.tagline}</p>
@@ -64,8 +64,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-border-soft flex flex-col sm:flex-row justify-between gap-3 text-xs text-text-muted">
-          <span>© {year} Smart Merd OS™. {t.footer.rights}</span>
-          <span>Norge</span>
+          <span>© {year} Smart Merd. {t.footer.rights}</span>
+          <span className="sm:text-right max-w-md">{t.footer.disclaimer}</span>
         </div>
       </div>
     </footer>

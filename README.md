@@ -1,6 +1,6 @@
-# Smart Merd OS™ — Marketing Site
+# Smart Merd — Marketing Site
 
-A premium, bilingual (Norwegian/English) marketing site for Smart Merd OS™, a decision-support platform for aquaculture. Built with Next.js (App Router), TypeScript, Tailwind CSS v4, and Framer Motion.
+A premium, bilingual (Norwegian/English) marketing site for Smart Merd and Smart Cage, a decision-support platform for aquaculture. Built with Next.js (App Router), TypeScript, Tailwind CSS v4, and Framer Motion.
 
 ## Getting started
 
@@ -13,12 +13,13 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Structure
 
-- `app/page.tsx` — assembles all sections of the single-page site
+- `app/page.tsx` — assembles the sections: Hero, Modes, HowItWorks, FeedingIntelligence, Status, Technology, Contact, FinalCTA
 - `app/layout.tsx` — fonts, SEO metadata, JSON-LD structured data
 - `app/api/contact/route.ts` — contact form endpoint (validation + honeypot + timing spam check)
 - `lib/i18n.tsx` — the NO/EN translation dictionary and language context (default: Norwegian, persisted to `localStorage`)
-- `lib/demo.ts` — "Be om demo" scroll-to-contact + auto-select-topic behavior
-- `components/` — one component per section (Hero, Problem, DataToAction, Capabilities, FeedingIntelligence, ProductPreview, Contact, etc.)
+- `lib/demo.ts` — `requestContact(topicIndex)`: scroll to the contact form and preselect the enquiry type (pilot / partner / general)
+- `lib/modes.ts` — one colour per operating mode (Historic amber, Live cyan, Simulation violet)
+- `components/` — one component per section; `ui.tsx` holds the shared SectionHeader and status Tag; `Mockups.tsx` the three mode mockups
 
 ## Contact form — next steps before going live
 
@@ -40,3 +41,10 @@ The `/api/contact` route currently validates submissions server-side and logs th
 npm run build
 npx eslint .
 ```
+
+## Content rules
+
+- Name: **Smart Merd** (company/platform) and **Smart Cage** (product). Never "OS" or "™".
+- NO and EN dictionaries in `lib/i18n.tsx` must keep identical structure.
+- Anything illustrative (figures, confidence, simulated results) must carry the "Illustrative" / "Example" label until validated.
+- The Development status split (`status` in `lib/i18n.tsx`) is a draft: confirm with the team.

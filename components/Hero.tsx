@@ -1,51 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/i18n";
-import { requestDemo } from "@/lib/demo";
+import { requestContact, TOPIC } from "@/lib/demo";
+import { MODE_STYLE, type ModeKey } from "@/lib/modes";
 import { Reveal } from "./Reveal";
 
-const BADGE_POS = [
-  { x: 12, y: 22 },
-  { x: 86, y: 20 },
-  { x: 6, y: 58 },
-  { x: 92, y: 60 },
-  { x: 22, y: 86 },
-  { x: 76, y: 88 },
-];
+const MODE_ICON: Record<ModeKey, React.ReactNode> = {
+  // clock with back arrow
+  historic: <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2" strokeLinecap="round" strokeLinejoin="round" />,
+  // pulse
+  live: <path d="M3 12h4l2-6 4 12 2-6h6" strokeLinecap="round" strokeLinejoin="round" />,
+  // branching paths
+  simulation: <path d="M5 4v6a4 4 0 0 0 4 4h6M15 14l-3-3m3 3-3 3M19 4v4m0 0a2 2 0 1 0 0 .01" strokeLinecap="round" strokeLinejoin="round" />,
+};
 
 export function Hero() {
   const { t } = useLanguage();
-  const ref = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
-    const el = ref.current;
-    if (!el) return;
-    const onMove = (e: MouseEvent) => {
-      const rect = el.getBoundingClientRect();
-      const px = (e.clientX - rect.left) / rect.width - 0.5;
-      const py = (e.clientY - rect.top) / rect.height - 0.5;
-      setTilt({ x: px * 10, y: py * 10 });
-    };
-    el.addEventListener("mousemove", onMove);
-    return () => el.removeEventListener("mousemove", onMove);
-  }, []);
 
   return (
-    <section id="top" className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-28 pb-16">
+    <section id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
       {/* Background */}
       <div className="absolute inset-0 bg-void" aria-hidden="true">
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 50% at 50% 30%, rgba(59,130,246,0.16) 0%, transparent 70%), radial-gradient(40% 40% at 80% 70%, rgba(124,92,252,0.14) 0%, transparent 70%), linear-gradient(180deg, #05070d 0%, #070a13 60%, #05070d 100%)",
+              "radial-gradient(60% 50% at 50% 20%, rgba(59,130,246,0.18) 0%, transparent 70%), radial-gradient(40% 40% at 85% 60%, rgba(124,92,252,0.14) 0%, transparent 70%), radial-gradient(35% 35% at 10% 70%, rgba(245,158,11,0.07) 0%, transparent 70%), linear-gradient(180deg, #05070d 0%, #070a13 60%, #05070d 100%)",
           }}
         />
-        {Array.from({ length: 18 }).map((_, i) => (
+        {Array.from({ length: 16 }).map((_, i) => (
           <span
             key={i}
             className="absolute rounded-full bg-cyan/40 animate-float-slow"
@@ -62,187 +45,70 @@ export function Hero() {
         ))}
       </div>
 
-      <div className="relative mx-auto max-w-6xl w-full px-6 grid lg:grid-cols-2 gap-16 items-center">
-        {/* Copy */}
-        <div>
-          <Reveal>
-            <span className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-cyan/90 border border-border-soft rounded-full px-4 py-1.5 glass">
-              {t.hero.eyebrow}
-            </span>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h1 className="mt-6 text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold leading-[1.08] tracking-tight text-white">
-              {t.hero.headline}
-            </h1>
-          </Reveal>
-          <Reveal delay={0.16}>
-            <p className="mt-6 text-lg text-text-secondary max-w-lg leading-relaxed">{t.hero.sub}</p>
-          </Reveal>
-          <Reveal delay={0.24}>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <button
-                onClick={requestDemo}
-                className="rounded-full px-7 py-3.5 text-sm font-medium text-white bg-[image:var(--gradient-brand)] hover:opacity-90 transition-all hover:scale-[1.02] shadow-[var(--shadow-glow-sm)]"
-              >
-                {t.hero.ctaPrimary}
-              </button>
-              <a
-                href="#hvordan"
-                className="rounded-full px-7 py-3.5 text-sm font-medium text-white border border-border-strong hover:bg-white/5 transition-colors"
-              >
-                {t.hero.ctaSecondary}
-              </a>
-            </div>
-          </Reveal>
-          <Reveal delay={0.32}>
-            <div className="mt-14 flex items-center gap-2 text-xs tracking-[0.15em] text-text-muted uppercase flex-wrap">
-              {t.hero.flow.map((step, i) => (
-                <span key={step} className="flex items-center gap-2">
-                  <span className={i === t.hero.flow.length - 1 ? "text-gradient font-semibold" : ""}>{step}</span>
-                  {i < t.hero.flow.length - 1 && <span className="text-border-strong">→</span>}
-                </span>
-              ))}
-            </div>
-          </Reveal>
+      <div className="relative mx-auto max-w-6xl px-6 text-center">
+        <Reveal>
+          <span className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 eyebrow tracking-[0.3em]">
+            {t.hero.eyebrow}
+          </span>
+        </Reveal>
+
+        <Reveal delay={0.08}>
+          <h1 className="mt-7 font-semibold tracking-tight text-white leading-[1.08] text-[clamp(1.7rem,1rem+4.2vw,4.25rem)]">
+            <span className="block">{t.hero.line1}</span>
+            <span className="block">{t.hero.line2}</span>
+            <span className="block text-gradient">{t.hero.line3}</span>
+          </h1>
+        </Reveal>
+
+        <Reveal delay={0.16}>
+          <p className="mt-7 mx-auto max-w-2xl text-base sm:text-lg text-text-secondary leading-relaxed">{t.hero.sub}</p>
+        </Reveal>
+
+        {/* Three operating modes */}
+        <div className="mt-12 grid gap-4 md:grid-cols-3 text-left">
+          {t.hero.modes.map((m, i) => {
+            const key = m.key as ModeKey;
+            const s = MODE_STYLE[key];
+            return (
+              <Reveal key={m.key} delay={0.22 + i * 0.08}>
+                <a
+                  href="#modes"
+                  className={`group relative block h-full rounded-2xl border ${s.border} bg-panel/80 p-5 sm:p-6 flex items-center gap-4 md:block transition-all duration-300 hover:-translate-y-1`}
+                  style={{ boxShadow: s.glow }}
+                >
+                  <div className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${s.hex}, transparent)` }} aria-hidden="true" />
+                  <div className={`w-11 h-11 shrink-0 rounded-xl ${s.bg} border ${s.border} flex items-center justify-center ${s.text}`}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                      {MODE_ICON[key]}
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className={`md:mt-5 text-xl font-semibold ${s.text}`}>{m.label}</h2>
+                    <p className="mt-1 md:mt-1.5 text-sm text-text-secondary">{m.text}</p>
+                  </div>
+                </a>
+              </Reveal>
+            );
+          })}
         </div>
 
-        {/* Visualization */}
-        <div
-          ref={ref}
-          className="relative aspect-square w-full max-w-[520px] mx-auto select-none"
-          style={{ perspective: 800 }}
-        >
-          <div
-            className="relative w-full h-full transition-transform duration-300 ease-out"
-            style={{ transform: `rotateX(${-tilt.y}deg) rotateY(${tilt.x}deg)` }}
-          >
-            <CageVisualization />
-
-            {/* Connecting lines */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              aria-hidden="true"
+        <Reveal delay={0.5}>
+          <div className="mt-12 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4">
+            <button
+              onClick={() => requestContact(TOPIC.pilot)}
+              className="rounded-full px-8 py-3.5 text-sm font-medium text-white bg-[image:var(--gradient-brand)] hover:opacity-90 transition-all hover:scale-[1.02] shadow-[var(--shadow-glow-sm)]"
             >
-              {BADGE_POS.map((p, i) => (
-                <line
-                  key={i}
-                  x1={50}
-                  y1={50}
-                  x2={p.x}
-                  y2={p.y}
-                  stroke="url(#heroLineGrad)"
-                  strokeWidth={0.3}
-                  className="animate-dash-flow"
-                  style={{ animationDelay: `${i * 0.4}s` }}
-                />
-              ))}
-              <defs>
-                <linearGradient id="heroLineGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0.15" />
-                </linearGradient>
-              </defs>
-            </svg>
-
-            {/* Data point badges */}
-            {BADGE_POS.map((p, i) => (
-              <div
-                key={i}
-                className="absolute -translate-x-1/2 -translate-y-1/2 animate-drift"
-                style={{ left: `${p.x}%`, top: `${p.y}%`, animationDelay: `${i * 0.5}s` }}
-              >
-                <div className="flex items-center gap-1.5 rounded-full glass px-3 py-1.5 text-[11px] font-medium text-white whitespace-nowrap shadow-lg">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[image:var(--gradient-brand)] animate-pulse-soft" />
-                  {t.hero.dataPoints[i]}
-                </div>
-              </div>
-            ))}
-
-            {/* Center hub */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="glass-strong rounded-2xl px-4 py-2.5 text-center shadow-[0_0_40px_rgba(124,92,252,0.35)]">
-                <div className="text-[10px] tracking-[0.15em] font-semibold text-gradient">{t.hero.hub}</div>
-              </div>
-            </div>
+              {t.hero.ctaPrimary}
+            </button>
+            <a
+              href="#modes"
+              className="rounded-full px-8 py-3.5 text-sm font-medium text-white text-center border border-border-strong hover:bg-white/5 transition-colors"
+            >
+              {t.hero.ctaSecondary}
+            </a>
           </div>
-        </div>
-      </div>
-
-      <div className="relative mx-auto mt-16 flex flex-col items-center gap-2 text-text-muted" aria-hidden="true">
-        <span className="text-[10px] tracking-[0.2em] uppercase">{t.hero.scrollHint}</span>
-        <span className="w-px h-8 bg-linear-to-b from-cyan to-transparent" />
+        </Reveal>
       </div>
     </section>
-  );
-}
-
-function CageVisualization() {
-  return (
-    <svg viewBox="0 0 400 400" className="absolute inset-0 w-full h-full" aria-hidden="true">
-      <defs>
-        <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0b1a33" stopOpacity="0.2" />
-          <stop offset="100%" stopColor="#03060d" stopOpacity="0.9" />
-        </linearGradient>
-        <linearGradient id="cageGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#22d3ee" />
-          <stop offset="55%" stopColor="#3b82f6" />
-          <stop offset="100%" stopColor="#a855f7" />
-        </linearGradient>
-      </defs>
-
-      {/* underwater volume */}
-      <rect x="0" y="190" width="400" height="210" fill="url(#waterGrad)" />
-      {/* waterline */}
-      <line x1="20" y1="190" x2="380" y2="190" stroke="#22d3ee" strokeOpacity="0.5" strokeWidth="1" />
-
-      {/* cage ring above water */}
-      <ellipse cx="200" cy="185" rx="150" ry="34" fill="none" stroke="url(#cageGrad)" strokeWidth="3" />
-      <ellipse cx="200" cy="185" rx="150" ry="34" fill="none" stroke="url(#cageGrad)" strokeWidth="3" strokeOpacity="0.25" transform="translate(0,-6)" />
-
-      {/* net going down, cone shape */}
-      <path
-        d="M 60 188 Q 90 320 200 355 Q 310 320 340 188"
-        fill="none"
-        stroke="url(#cageGrad)"
-        strokeOpacity="0.55"
-        strokeWidth="1.4"
-      />
-      <path
-        d="M 90 186 Q 115 300 200 335 Q 285 300 310 186"
-        fill="none"
-        stroke="url(#cageGrad)"
-        strokeOpacity="0.35"
-        strokeWidth="1.2"
-      />
-      <path
-        d="M 130 184 Q 150 270 200 300 Q 250 270 270 184"
-        fill="none"
-        stroke="url(#cageGrad)"
-        strokeOpacity="0.25"
-        strokeWidth="1"
-      />
-
-      {/* horizontal net rings underwater */}
-      <ellipse cx="200" cy="230" rx="126" ry="24" fill="none" stroke="#3b82f6" strokeOpacity="0.3" strokeWidth="1" />
-      <ellipse cx="200" cy="275" rx="98" ry="18" fill="none" stroke="#7c5cfc" strokeOpacity="0.28" strokeWidth="1" />
-
-      {/* fish */}
-      {[
-        { d: "M0,0 q10,-6 20,0 q-10,6 -20,0 Z", x: 150, y: 240, scale: 1, dur: "16s", delay: "0s" },
-        { d: "M0,0 q10,-6 20,0 q-10,6 -20,0 Z", x: 230, y: 260, scale: 0.8, dur: "13s", delay: "2s" },
-        { d: "M0,0 q10,-6 20,0 q-10,6 -20,0 Z", x: 190, y: 210, scale: 0.65, dur: "18s", delay: "4s" },
-      ].map((f, i) => (
-        <g key={i} transform={`translate(${f.x} ${f.y}) scale(${f.scale})`} className="animate-swim" style={{ animationDuration: f.dur, animationDelay: f.delay, transformOrigin: "center" }}>
-          <path d={f.d} fill="#8ecbff" fillOpacity="0.55" />
-        </g>
-      ))}
-
-      {/* buoy accents above water */}
-      <circle cx="60" cy="172" r="6" fill="url(#cageGrad)" fillOpacity="0.8" />
-      <circle cx="340" cy="172" r="6" fill="url(#cageGrad)" fillOpacity="0.8" />
-    </svg>
   );
 }
